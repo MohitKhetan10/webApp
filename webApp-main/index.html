@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Data App</title>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+    import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDRroMstmeqRV9nE4vaER1PGFcYBE11iC0",
+      authDomain: "student-data-4eb0d.firebaseapp.com",
+      databaseURL: "https://student-data-4eb0d-default-rtdb.firebaseio.com",
+      projectId: "student-data-4eb0d",
+      storageBucket: "student-data-4eb0d.firebasestorage.app",
+      messagingSenderId: "1099027823384",
+      appId: "1:1099027823384:web:81bd13912c83e8e8b6bc6d",
+      measurementId: "G-DY3QQ0V4V6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+
+    const studentsRef = ref(database, 'students');
+
+    document.getElementById('student-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const address = document.getElementById('address').value;
+      const course = document.getElementById('course').value;
+      const sport = document.getElementById('sport').value;
+
+      const newStudentRef = push(studentsRef);
+      set(newStudentRef, {
+        name: name,
+        address: address,
+        course: course,
+        sport: sport
+      });
+
+      document.getElementById('student-form').reset();
+    });
+
+    onValue(studentsRef, (snapshot) => {
+      const dataList = document.getElementById('data-list');
+      dataList.innerHTML = ''; // Clear existing data
+
+      snapshot.forEach((childSnapshot) => {
+        const student = childSnapshot.val();
+        const studentId = childSnapshot.key;
+
+        const studentCard = document.createElement('div');
+        studentCard.className = 'student-card';
+        studentCard.innerHTML = `
+          <p><strong>Name:</strong> ${student.name}</p>
+          <p><strong>Address:</strong> ${student.address}</p>
+          <p><strong>Course:</strong> ${student.course}</p>
+          <p><strong>Sport:</strong> ${student.sport}</p>
+          <button class="delete-btn" onclick="deleteStudent('${studentId}')">Delete</button>
+        `;
+
+        dataList.appendChild(studentCard);
+      });
+    });
+
+    window.deleteStudent = (studentId) => {
+      const studentRef = ref(database, `students/${studentId}`);
+      remove(studentRef);
+    };
+  </script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1 style="text-align: center; margin-bottom: 20px;">Student Data Management</h1>
+
+  <form id="student-form">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="text" id="address" placeholder="Address" required>
+    <input type="text" id="course" placeholder="Course" required>
+    <input type="text" id="sport" placeholder="Sport" required>
+    <button type="submit">Add Student</button>
+  </form>
+
+  <div id="data-list">
+  </div>
+
+</body>
+</html> 
