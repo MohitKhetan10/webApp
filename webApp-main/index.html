@@ -77,18 +77,53 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1 style="text-align: center; margin-bottom: 20px;">Student Data Management</h1>
+  <header>
+    <h1>Student Data App</h1>
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <div class="menu">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#" onclick="toggleDarkMode()">Toggle Dark Mode</a>
+    </div>
+  </header>
 
-  <form id="student-form">
-    <input type="text" id="name" placeholder="Name" required>
-    <input type="text" id="address" placeholder="Address" required>
-    <input type="text" id="course" placeholder="Course" required>
-    <input type="text" id="sport" placeholder="Sport" required>
-    <button type="submit">Add Student</button>
-  </form>
+  <div class="form-container">
+    <h2>Enter Student Data</h2>
+    <form id="student-form">
+      <label for="name">Name</label>
+      <input type="text" id="name" placeholder="Student Name" required>
+      
+      <label for="address">Address</label>
+      <input type="text" id="address" placeholder="Address" required>
 
-  <div id="data-list">
+      <label for="course">Course</label>
+      <input type="text" id="course" placeholder="Course" required>
+
+      <label for="sport">Sport</label>
+      <input type="text" id="sport" placeholder="Sport" required>
+
+      <label for="photo">Student Photo</label>
+      <input type="file" id="photo">
+
+      <button type="submit">Add Student</button>
+    </form>
   </div>
 
+  <div id="data-list">
+    <!-- Data will be displayed here -->
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.querySelector('.menu');
+      menu.classList.toggle('active');
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
+
 </body>
-</html> 
+</html>
